@@ -3,7 +3,6 @@ package dao
 import (
 	"api/public"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 type Address struct {
@@ -22,7 +21,7 @@ func (a *Address) Create() error {
 	c := gin.Context{}
 	c.Set("trace", "_new_address")
 	a.Status = 1
-	a.Createtime = int(time.Now().Unix())
+	//a.Createtime = int(time.Now().Unix())
 	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Create(a).Error
 }
 
