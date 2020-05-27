@@ -26,7 +26,7 @@ var R randstruct
 
 func init() {
 	R = randstruct{
-		Rand:    rand.New(rand.NewSource(time.Now().Unix())),
+		Rand:    rand.New(rand.NewSource(time.Now().UnixNano())),
 		Str:     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 		StrLow:  "abcdefghijklmnopqrstuvwxyz",
 		Number:  "0123456789",
