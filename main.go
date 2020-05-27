@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/controller/task"
 	"api/public"
 	"api/router"
 	"github.com/xiaka53/DeployAndLog/lib"
@@ -21,6 +22,9 @@ func main() {
 	}
 	if err := public.InitMysql(); err != nil {
 		log.Fatal(err)
+	}
+	{
+		task.AccountInit()
 	}
 	defer lib.Destroy()
 	public.InitValidate()
