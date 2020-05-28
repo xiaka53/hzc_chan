@@ -55,7 +55,7 @@ func (b *block) insert() {
 	b.Number++
 	b.Size = 235 //TODO 初始块235
 	b.sync.Unlock()
-	size += getMiner().server()
+	size += GetMiner().server()
 	tx = "hzcblock" + public.RandString(59, public.LOWER_CASE, public.NUMBER)
 	block = dao.Blok{Number: number, Hash: tx, Size: size}
 	(&block).Create()

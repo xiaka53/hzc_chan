@@ -31,7 +31,7 @@ func MinerInit() {
 	return
 }
 
-func getMiner() *miner {
+func GetMiner() *miner {
 	return examplesMiner
 }
 
@@ -51,7 +51,7 @@ func (m *miner) server() (num int) {
 	return
 }
 
-func (m *miner) start(threads int) bool {
+func (m *miner) Start(threads int) bool {
 	data := dao.Miner{Status: 1}
 	if err := (&data).First(); err != nil {
 		data.Status = 2
@@ -74,7 +74,7 @@ func (m *miner) start(threads int) bool {
 	return true
 }
 
-func (m *miner) stop() bool {
+func (m *miner) Stop() bool {
 	data := dao.Miner{Status: 1}
 	if err := (&data).Last(); err != nil {
 		return false
@@ -90,7 +90,7 @@ func (m *miner) stop() bool {
 	return true
 }
 
-func (m *miner) set(address string) bool {
+func (m *miner) Set(address string) bool {
 	data := dao.Miner{Address: address}
 	if err := data.Update(); err != nil {
 		return false
