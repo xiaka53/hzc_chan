@@ -1,4 +1,4 @@
-package private
+package _interface
 
 import "api/dao"
 
