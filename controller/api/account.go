@@ -13,7 +13,7 @@ type account struct {
 	_interface.Account
 }
 
-func accountRouter(r *gin.RouterGroup) {
+func AccountRouter(r *gin.RouterGroup) {
 	var a account
 	a.Account = interface_v1.GetAccount()
 	r.GET("new", a.getAddress)

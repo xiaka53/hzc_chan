@@ -13,10 +13,11 @@ type balance struct {
 	_interface.Balance
 }
 
-func balanceRouter(r *gin.RouterGroup) {
+func BalanceRouter(r *gin.RouterGroup) {
 	var b balance
 	b.Balance = interface_v1.GetBalance()
-
+	r.GET("blance", b.blance)
+	r.GET("all", b.all)
 }
 
 // @Summary 获取余额
@@ -26,8 +27,8 @@ func balanceRouter(r *gin.RouterGroup) {
 // @Param address query string true "地址"
 // @Param token query string false "token币种"
 // @Success 200 {string} string
-// @Router /chan/blance/balance [get]
-func (b *balance) balance(c *gin.Context) {
+// @Router /chan/blance/blance [get]
+func (b *balance) blance(c *gin.Context) {
 	var (
 		param  dto.BalanceInout
 		amount float64
@@ -54,7 +55,7 @@ func (b *balance) balance(c *gin.Context) {
 // @Produce  json
 // @Param token query string false "token币种"
 // @Success 200 {string} string
-// @Router /chan/blance/balance [get]
+// @Router /chan/blance/all [get]
 func (b *balance) all(c *gin.Context) {
 	var (
 		param  dto.AllInout
