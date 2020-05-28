@@ -48,13 +48,11 @@ func (a *account) newAccount() {
 }
 
 func (a *account) add(address dao.Address) {
+	a.Sync.RLock()
+	a.Count += 1
+	a.Sync.RUnlock()
 	go func() {
-		for {
-			a.Sync.RLock()
-			a.Count += 1
-			a.Sync.RUnlock()
-			a.Chan <- address
-		}
+		a.Chan <- address
 	}()
 	return
 }

@@ -3,6 +3,7 @@ package dao
 import (
 	"api/public"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type Blok struct {
@@ -16,8 +17,21 @@ func (b *Blok) TableName() string {
 	return "block"
 }
 
-func (b *Blok) Create() error {
+func (b *Blok) _Create() error {
 	c := gin.Context{}
 	c.Set("trace", "_new_blog")
 	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Create(b).Error
+}
+
+func (b *Blok) Create() {
+	b.Createtime = int(time.Now().Unix())
+	if err := b._Create(); err != nil {
+		b.Hash = "hzc" + public.RandString(64, public.LOWER_CASE, public.NUMBER)
+		b.Create()
+	}
+	return
+}
+
+func (b *Blok) Last() error {
+	return public.ChanPool.Table(b.TableName()).Last(b).Error
 }

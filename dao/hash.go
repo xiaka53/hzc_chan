@@ -31,3 +31,10 @@ func (h *Hash) Create(db *gorm.DB) error {
 	c.Set("trace", "_new_hash")
 	return db.SetCtx(public.GetGinTraceContext(&c)).Create(h).Error
 }
+
+func (h *Hash) Updates(hash []string) {
+	var c gin.Context
+	c.Set("trace", "_update_hash")
+	public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(h.TableName()).Where("hash in (?)", hash).Updates(map[string]interface{}{"blockHash": h.BlockHash, "blockNumber": h.BlockNumber})
+	public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(h.TableName()).Where("hash in (?) and status=0", hash).Update("status", 1)
+}

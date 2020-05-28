@@ -24,7 +24,8 @@ func main() {
 		log.Fatal(err)
 	}
 	{
-		task.AccountInit()
+		go task.AccountInit()
+		go task.BlockInit()
 	}
 	defer lib.Destroy()
 	public.InitValidate()
