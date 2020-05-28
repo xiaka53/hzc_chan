@@ -35,5 +35,5 @@ type Miner interface {
 //代币
 type Token interface {
 	Address() (data []dao.Token)
-	Deploy()
+	//Deploy()
 }
