@@ -45,3 +45,7 @@ func (b *Balance) Find() (data []Balance) {
 func (b *Balance) Sum() error {
 	return public.ChanPool.Where(b).Select("sum(asset) asset").First(b).Error
 }
+
+func (b *Balance) RecordNotFound() bool {
+	return public.ChanPool.Where(b).RecordNotFound()
+}

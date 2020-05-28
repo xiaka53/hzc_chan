@@ -22,7 +22,7 @@ func GetHash() *hash {
 	return examplesHash
 }
 
-func (h *hash) add(hs dao.Hash) {
+func (h *hash) Add(hs dao.Hash) {
 	go func() {
 		h.Chan <- hs
 	}()

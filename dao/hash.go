@@ -36,6 +36,7 @@ func (h *Hash) _Create() error {
 }
 
 func (h *Hash) Create() {
+	public.ChanPool.Where("from=? or to=?", h.From, h.From).Where("status=1").Count(h.Nonce)
 	if err := h._Create(); err != nil {
 		h.Create()
 	}
@@ -47,4 +48,20 @@ func (h *Hash) Updates(hash []string) {
 	c.Set("trace", "_update_hash")
 	public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(h.TableName()).Where("hash in (?)", hash).Updates(map[string]interface{}{"blockHash": h.BlockHash, "blockNumber": h.BlockNumber})
 	public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(h.TableName()).Where("hash in (?) and status=0", hash).Update("status", 1)
+}
+
+func (h *Hash) First() error {
+	return public.ChanPool.Where(h).First(h).Error
+}
+
+func (h *Hash) Find() []Hash {
+	var data []Hash
+	public.ChanPool.Where(h).Find(&data)
+	return data
+}
+
+func (h *Hash) FindByAddress() []Hash {
+	var data []Hash
+	public.ChanPool.Where("`from`=? or `to`=?", h.From, h.From).Find(&data)
+	return data
 }

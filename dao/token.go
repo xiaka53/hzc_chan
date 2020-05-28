@@ -33,3 +33,7 @@ func (t *Token) Create(db *gorm.DB) error {
 func (t *Token) First() error {
 	return public.ChanPool.Where(t).First(t).Error
 }
+
+func (t *Token) RecordNotFound() bool {
+	return public.ChanPool.Where(t).RecordNotFound()
+}
