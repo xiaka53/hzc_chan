@@ -12,6 +12,8 @@ type Balance interface {
 type Account interface {
 	NewAccount() (address, keys, mnemonic string)
 	ImportRawKey(key string) (address string)
+	ExportRawKey(address string) (key string)
+	ExportMnemonic(address string) (mnemonic string)
 	LockAccount(address string) bool
 	UnlockAccount(address string) bool
 	ListAccount() (data []string)

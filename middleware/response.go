@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	ERROR   ResponseCode = 500
-	SUCCESS ResponseCode = 200
+	ERROR     ResponseCode = 500
+	SUCCESS   ResponseCode = 200
+	PARAMETER ResponseCode = 10001
 )
 
 type ResponseCode int

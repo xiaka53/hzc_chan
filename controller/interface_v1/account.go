@@ -32,6 +32,22 @@ func (a *apiAccount) ImportRawKey(key string) (address string) {
 	return
 }
 
+func (a *apiAccount) ExportRawKey(address string) (key string) {
+	var account dao.Address
+	account.Address = address
+	_ = (&account).First()
+	key = account.Keys
+	return
+}
+
+func (a *apiAccount) ExportMnemonic(address string) (mnemonic string) {
+	var account dao.Address
+	account.Address = address
+	_ = (&account).First()
+	mnemonic = account.Mnemonic
+	return
+}
+
 func (a *apiAccount) LockAccount(address string) bool {
 	var account dao.Address
 	account.Address = address
