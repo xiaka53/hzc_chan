@@ -25,6 +25,14 @@ func (b *Balance) Updates(db *gorm.DB) error {
 	return db.Updates(b).Error
 }
 
+func (b *Balance) Close() error {
+	return public.ChanPool.Where(b).Update("status", 2).Error
+}
+
+func (b *Balance) Open() error {
+	return public.ChanPool.Where(b).Update("status", 1).Error
+}
+
 func (b *Balance) First() error {
 	return public.ChanPool.Where(b).First(b).Error
 }

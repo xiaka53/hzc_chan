@@ -15,17 +15,19 @@ type account struct {
 	Count int
 }
 
+var examplesAccount *account
+
 func AccountInit() {
-	examples := &account{
+	examplesAccount = &account{
 		Chan:  make(chan dao.Address),
 		Sync:  sync.RWMutex{},
 		Count: 0,
 	}
 	data := (&dao.Address{Status: 1}).Find()
 	for _, v := range data {
-		examples.add(v)
+		examplesAccount.add(v)
 	}
-	examples.inspection()
+	examplesAccount.inspection()
 }
 
 func (a *account) inspection() {
@@ -57,11 +59,15 @@ func (a *account) add(address dao.Address) {
 	return
 }
 
-func (a *account) out() dao.Address {
+func (a *account) Out() dao.Address {
 	address := <-a.Chan
 	a.Sync.RLock()
 	a.Count -= 1
 	a.Sync.RUnlock()
 	go a.inspection()
 	return address
+}
+
+func GetAccount() *account {
+	return examplesAccount
 }

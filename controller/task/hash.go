@@ -48,6 +48,10 @@ func (h *hash) server() {
 			hashData.Status = 2
 			goto CON
 		}
+		if fromBalance.Status == 2 {
+			hashData.Status = 2
+			goto CON
+		}
 		fromBalance.Asset.Sub(fromBalance.Asset, hashData.Gas)
 		if fromBalance.Asset.Int64() < 0 {
 			goto CON
@@ -65,6 +69,9 @@ func (h *hash) server() {
 			} else { //代币交易
 				fromTokenBalance.Token = hashData.To[:43]
 				if err = (&fromTokenBalance).First(); err != nil {
+					goto ERR
+				}
+				if fromTokenBalance.Status == 2 {
 					goto ERR
 				}
 				fromTokenBalance.Asset.Sub(fromTokenBalance.Asset, hashData.Index)
