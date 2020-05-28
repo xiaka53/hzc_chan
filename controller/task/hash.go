@@ -73,9 +73,7 @@ func (h *hash) server() {
 				}
 				toBalance.Address = hashData.To[43:]
 				toBalance.Token = fromTokenBalance.Token
-				if err = (&toBalance).First(); err != nil {
-					goto ERR
-				}
+				_ = (&toBalance).First()
 				toBalance.Asset.Add(toBalance.Asset, hashData.Index)
 				if err = (&toBalance).Updates(db); err != nil {
 					goto ERR
@@ -85,9 +83,7 @@ func (h *hash) server() {
 			fromBalance.Asset.Sub(fromBalance.Asset, hashData.Value)
 			toBalance.Address = hashData.To
 			toBalance.Token = fromBalance.Token
-			if err = (&toBalance).First(); err != nil {
-				goto ERR
-			}
+			_ = (&toBalance).First()
 			toBalance.Asset.Add(toBalance.Asset, hashData.Index)
 			if err = (&toBalance).Updates(db); err != nil {
 				goto ERR
