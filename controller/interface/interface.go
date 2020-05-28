@@ -19,7 +19,7 @@ type Account interface {
 
 //交易
 type Transaction interface {
-	SendTransaction(from, to, date string, value, gas float64)
+	SendTransaction(from, to, date string, value, gas float64) (tx string)
 	GetTransactionByHash(hx string) (hash dao.Hash)
 	GetTransactionByBlock(block int) (data []dao.Hash)
 	GetTransactionByAddress(address string) (data []dao.Hash)
