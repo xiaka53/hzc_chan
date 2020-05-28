@@ -14,22 +14,22 @@ type block struct {
 	sync   sync.Mutex
 }
 
-var examples *block
+var examplesBlock *block
 
 func BlockInit() {
 	blockLast := dao.Blok{}
 	if err := (&blockLast).Last(); err != nil {
 		blockLast.Number = 0
 	}
-	examples = &block{
+	examplesBlock = &block{
 		Number: blockLast.Number + 1,
 		Size:   235,
 	}
-	examples.server()
+	examplesBlock.server()
 }
 
 func getBlock() *block {
-	return examples
+	return examplesBlock
 }
 
 func (b *block) server() {
@@ -56,7 +56,7 @@ func (b *block) insert() {
 	b.Size = 235 //TODO 初始块235
 	b.sync.Unlock()
 	//TODO 预留挖矿空间
-	tx = "hzc" + public.RandString(64, public.LOWER_CASE, public.NUMBER)
+	tx = "hzcblock" + public.RandString(59, public.LOWER_CASE, public.NUMBER)
 	block = dao.Blok{Number: number, Hash: tx, Size: size}
 	(&block).Create()
 	(&dao.Hash{BlockNumber: number, BlockHash: block.Hash}).Updates(hash)

@@ -26,6 +26,7 @@ func main() {
 	{
 		go task.AccountInit()
 		go task.BlockInit()
+		go task.HashInit()
 	}
 	defer lib.Destroy()
 	public.InitValidate()

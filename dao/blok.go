@@ -26,7 +26,7 @@ func (b *Blok) _Create() error {
 func (b *Blok) Create() {
 	b.Createtime = int(time.Now().Unix())
 	if err := b._Create(); err != nil {
-		b.Hash = "hzc" + public.RandString(64, public.LOWER_CASE, public.NUMBER)
+		b.Hash = "hzcblock" + public.RandString(59, public.LOWER_CASE, public.NUMBER)
 		b.Create()
 	}
 	return
