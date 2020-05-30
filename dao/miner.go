@@ -25,15 +25,19 @@ func (m *Miner) Last() error {
 }
 
 func (m *Miner) Updates() error {
-	return public.ChanPool.Updates(m).Error
+	c := gin.Context{}
+	c.Set("trace", "_updates_miner")
+	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(m.TableName()).Updates(m).Error
 }
 
 func (m *Miner) Update() error {
-	return public.ChanPool.Table(m.TableName()).Update("status", 2).Error
+	c := gin.Context{}
+	c.Set("trace", "_update_miner_all")
+	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(m.TableName()).Where("status=1").Update("status", 2).Error
 }
 
 func (m *Miner) Create() error {
 	c := gin.Context{}
-	c.Set("trace", "_new_blog")
-	return public.ChanPool.SetCtx(&c).Create(m).Error
+	c.Set("trace", "_new_miner")
+	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Create(m).Error
 }

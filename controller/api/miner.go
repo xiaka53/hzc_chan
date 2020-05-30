@@ -16,7 +16,9 @@ type miner struct {
 func MinerRouter(r *gin.RouterGroup) {
 	var m miner
 	m.Miner = interface_v1.GetMiner()
-
+	r.POST("start", m.start)
+	r.GET("stop", m.stop)
+	r.POST("set", m.set)
 }
 
 // @Summary 开启挖矿

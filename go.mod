@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/viper v1.7.0 // indirect
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.5.1

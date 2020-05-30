@@ -19,5 +19,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) (router *gin.Engine) {
 	api.BalanceRouter(blance)
 	account := r.Group("account")
 	api.AccountRouter(account)
+	miner := r.Group("miner")
+	api.MinerRouter(miner)
 	return
 }

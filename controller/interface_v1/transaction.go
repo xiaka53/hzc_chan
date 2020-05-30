@@ -3,8 +3,6 @@ package interface_v1
 import (
 	"api/controller/task"
 	"api/dao"
-	"math"
-	"math/big"
 )
 
 type apiTransaction struct {
@@ -32,14 +30,14 @@ func (a *apiTransaction) SendTransaction(from, to, date, input string, value, ga
 		if (&dao.Token{Token: date, Status: 1}).RecordNotFound() {
 			return
 		}
-		hash.Index = big.NewInt(int64(value * math.Pow(10, 18)))
+		hash.Index = value
 	} else {
-		hash.Value = big.NewInt(int64(value * math.Pow(10, 18)))
+		hash.Value = value
 	}
 	hash = dao.Hash{
 		From:   from,
 		To:     to + date,
-		Gas:    big.NewInt(int64(gas * math.Pow(10, 18))),
+		Gas:    gas,
 		Input:  input,
 		Status: 0,
 	}

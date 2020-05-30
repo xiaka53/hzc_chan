@@ -4,7 +4,7 @@ import (
 	"api/dao"
 	"api/public"
 	"github.com/gin-gonic/gin"
-	"math/big"
+	"github.com/shopspring/decimal"
 	"sync"
 )
 
@@ -36,7 +36,7 @@ func GetMiner() *miner {
 }
 
 func (m *miner) server() (num int) {
-	if m == nil {
+	if m == nil || m.threads == 0 {
 		return
 	}
 	num = m.threads * 10 //TODO 单个线程挖矿数量为10
@@ -45,10 +45,10 @@ func (m *miner) server() (num int) {
 	}
 	balance := &dao.Balance{Address: m.address, Token: "HZC"}
 	_ = balance.First()
-	balance.Asset.Add(balance.Asset, big.NewInt(int64(num)))
+	balance.Asset, _ = decimal.NewFromFloat(balance.Asset).Add(decimal.NewFromFloat(float64(num))).Float64()
 	var c gin.Context
 	c.Set("trace", "_new_hash")
-	if err := balance.Updates(public.ChanPool.SetCtx(public.GetGinTraceContext(&c))); err != nil {
+	if err := (balance).Updates(public.ChanPool.SetCtx(public.GetGinTraceContext(&c))); err != nil {
 		return 0
 	}
 	return
@@ -70,10 +70,10 @@ func (m *miner) Start(threads int) bool {
 	if data.Threads < 1 {
 		return false
 	}
-	m.mutex.Lock()
+	m.mutex.RLock()
 	m.address = data.Address
 	m.threads = data.Threads
-	m.mutex.Unlock()
+	m.mutex.RUnlock()
 	return true
 }
 
@@ -86,20 +86,21 @@ func (m *miner) Stop() bool {
 	if err := (&data).Updates(); err != nil {
 		return false
 	}
-	m.mutex.Lock()
-	m = nil
-	m.mutex.Unlock()
+	m.mutex.RLock()
+	m.threads = 0
+	m.mutex.RUnlock()
 	return true
 }
 
 func (m *miner) Set(address string) bool {
 	data := dao.Miner{Address: address}
-	if err := data.Update(); err != nil {
+	if err := (data).Update(); err != nil {
 		return false
 	}
 	_ = (&data).First()
 	data.Status = 1
-	if err := (&data).Updates(); err != nil {
+	data.Threads = 0
+	if err := (&data).Create(); err != nil {
 		return false
 	}
 	return true

@@ -2,7 +2,6 @@ package interface_v1
 
 import (
 	"api/dao"
-	"math"
 )
 
 type apiBalance struct {
@@ -17,7 +16,7 @@ func (a *apiBalance) GetBalance(address, token string) (balance float64) {
 	if err := (&balanceData).First(); err != nil {
 		return
 	}
-	balance = float64(balanceData.Asset.Int64()) / math.Pow(10, 18)
+	balance = float64(balanceData.Asset)
 	return
 }
 
@@ -26,6 +25,6 @@ func (a *apiBalance) GetBalanceAll(token string) (balance float64) {
 	if err := (&balanceData).Sum(); err != nil {
 		return
 	}
-	balance = float64(balanceData.Asset.Int64()) / math.Pow(10, 18)
+	balance = float64(balanceData.Asset)
 	return
 }

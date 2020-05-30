@@ -5,6 +5,7 @@ import (
 	"api/public"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 type hash struct {
@@ -52,14 +53,14 @@ func (h *hash) server() {
 			hashData.Status = 2
 			goto CON
 		}
-		fromBalance.Asset.Sub(fromBalance.Asset, hashData.Gas)
-		if fromBalance.Asset.Int64() < 0 {
+		fromBalance.Asset, _ = decimal.NewFromFloat(fromBalance.Asset).Sub(decimal.NewFromFloat(hashData.Gas)).Float64()
+		if fromBalance.Asset < 0 {
 			goto CON
 		}
 		fromTokenBalance.Address = hashData.From
 		c.Set("trace", "_new_transfer")
 		db = public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Begin()
-		if hashData.Index.Int64() > 0 {
+		if hashData.Index > 0 {
 			if hashData.From == hashData.To { //创建代币
 				fromTokenBalance.Token = hashData.ContractAddress
 				fromTokenBalance.Asset = hashData.Index
@@ -74,24 +75,24 @@ func (h *hash) server() {
 				if fromTokenBalance.Status == 2 {
 					goto ERR
 				}
-				fromTokenBalance.Asset.Sub(fromTokenBalance.Asset, hashData.Index)
+				fromTokenBalance.Asset, _ = decimal.NewFromFloat(fromTokenBalance.Asset).Sub(decimal.NewFromFloat(hashData.Index)).Float64()
 				if err = (&fromTokenBalance).Updates(db); err != nil {
 					goto ERR
 				}
 				toBalance.Address = hashData.To[43:]
 				toBalance.Token = fromTokenBalance.Token
 				_ = (&toBalance).First()
-				toBalance.Asset.Add(toBalance.Asset, hashData.Index)
+				toBalance.Asset, _ = decimal.NewFromFloat(toBalance.Asset).Add(decimal.NewFromFloat(hashData.Index)).Float64()
 				if err = (&toBalance).Updates(db); err != nil {
 					goto ERR
 				}
 			}
 		} else {
-			fromBalance.Asset.Sub(fromBalance.Asset, hashData.Value)
+			fromBalance.Asset, _ = decimal.NewFromFloat(fromBalance.Asset).Sub(decimal.NewFromFloat(hashData.Value)).Float64()
 			toBalance.Address = hashData.To
 			toBalance.Token = fromBalance.Token
 			_ = (&toBalance).First()
-			toBalance.Asset.Add(toBalance.Asset, hashData.Index)
+			toBalance.Asset, _ = decimal.NewFromFloat(toBalance.Asset).Add(decimal.NewFromFloat(hashData.Index)).Float64()
 			if err = (&toBalance).Updates(db); err != nil {
 				goto ERR
 			}
