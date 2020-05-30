@@ -65,6 +65,13 @@ func (a *account) Out() dao.Address {
 	a.Count -= 1
 	a.Sync.RUnlock()
 	go a.inspection()
+	address.Status = 2
+	if err := (&address).Updates(); err != nil {
+		return *new(dao.Address)
+	}
+	if err := (&dao.Balance{Address: address.Address, Status: 1, Token: "HZC"}).HzcCreate(); err != nil {
+		return *new(dao.Address)
+	}
 	return address
 }
 

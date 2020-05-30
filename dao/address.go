@@ -33,3 +33,9 @@ func (a *Address) Find() (data []Address) {
 	public.ChanPool.Where(a).Find(&data)
 	return data
 }
+
+func (a *Address) Updates() error {
+	c := gin.Context{}
+	c.Set("trace", "_out_address")
+	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(a.TableName()).Where("address=?", a.Address).Updates(a).Error
+}

@@ -35,7 +35,7 @@ func ValidateMysqlInjection(f1 validator.FieldLevel) bool {
 	if strings.Index(f1.Field().String(), "(") > -1 {
 		return false
 	}
-	if strings.Index(f1.Field().String(), "or") > -1 {
+	if strings.Index(f1.Field().String(), " ") > -1 {
 		return false
 	}
 	if strings.Index(f1.Field().String(), "*") > -1 {

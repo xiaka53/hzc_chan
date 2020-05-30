@@ -63,7 +63,7 @@ func (h *hash) server() {
 			if hashData.From == hashData.To { //创建代币
 				fromTokenBalance.Token = hashData.ContractAddress
 				fromTokenBalance.Asset = hashData.Index
-				if err = (fromTokenBalance).Create(db); err != nil {
+				if err = (&fromTokenBalance).Create(db); err != nil {
 					goto ERR
 				}
 			} else { //代币交易

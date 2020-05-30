@@ -33,5 +33,5 @@ func (b *Blok) Create() {
 }
 
 func (b *Blok) Last() error {
-	return public.ChanPool.Table(b.TableName()).Last(b).Error
+	return public.ChanPool.Table(b.TableName()).Order("number desc").First(b).Error
 }

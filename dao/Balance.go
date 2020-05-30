@@ -3,6 +3,7 @@ package dao
 import (
 	"api/public"
 	"github.com/e421083458/gorm"
+	"github.com/gin-gonic/gin"
 	"math/big"
 )
 
@@ -14,11 +15,17 @@ type Balance struct {
 }
 
 func (b *Balance) TableName() string {
-	return "token"
+	return "balance"
 }
 
 func (b *Balance) Create(db *gorm.DB) error {
 	return db.Create(b).Error
+}
+
+func (b *Balance) HzcCreate() error {
+	var c gin.Context
+	c.Set("trace", "_new_hzc_account")
+	return public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Create(b).Error
 }
 
 func (b *Balance) Updates(db *gorm.DB) error {
@@ -26,11 +33,11 @@ func (b *Balance) Updates(db *gorm.DB) error {
 }
 
 func (b *Balance) Close() error {
-	return public.ChanPool.Where(b).Update("status", 2).Error
+	return public.ChanPool.Table(b.TableName()).Where(b).Update("status", 2).Error
 }
 
 func (b *Balance) Open() error {
-	return public.ChanPool.Where(b).Update("status", 1).Error
+	return public.ChanPool.Table(b.TableName()).Where(b).Update("status", 1).Error
 }
 
 func (b *Balance) First() error {

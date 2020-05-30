@@ -14,9 +14,10 @@ func InitRouter(middlewares ...gin.HandlerFunc) (router *gin.Engine) {
 	router.Use(middlewares...)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	blance := router.Group("blance")
+	r := router.Group("chan")
+	blance := r.Group("blance")
 	api.BalanceRouter(blance)
-	account := router.Group("account")
+	account := r.Group("account")
 	api.AccountRouter(account)
 	return
 }

@@ -36,6 +36,9 @@ func GetMiner() *miner {
 }
 
 func (m *miner) server() (num int) {
+	if m == nil {
+		return
+	}
 	num = m.threads * 10 //TODO 单个线程挖矿数量为10
 	if num < 10 {
 		return
@@ -84,8 +87,7 @@ func (m *miner) Stop() bool {
 		return false
 	}
 	m.mutex.Lock()
-	m.address = data.Address
-	m.threads = data.Threads
+	m = nil
 	m.mutex.Unlock()
 	return true
 }

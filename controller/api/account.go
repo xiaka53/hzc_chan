@@ -17,11 +17,11 @@ func AccountRouter(r *gin.RouterGroup) {
 	var a account
 	a.Account = interface_v1.GetAccount()
 	r.GET("new", a.getAddress)
-	r.GET("import_rawKey", a.importRawKey)
-	r.GET("export_rawKey", a.exportRawKey)
-	r.GET("export_mnemonic", a.exportMnemonic)
-	r.GET("lock", a.lockAccount)
-	r.GET("unlock", a.unlockAccount)
+	r.POST("import_rawKey", a.importRawKey)
+	r.POST("export_rawKey", a.exportRawKey)
+	r.POST("export_mnemonic", a.exportMnemonic)
+	r.POST("lock", a.lockAccount)
+	r.POST("unlock", a.unlockAccount)
 	r.GET("list", a.listAccount)
 }
 
@@ -30,7 +30,7 @@ func AccountRouter(r *gin.RouterGroup) {
 // @Id 001
 // @Produce  json
 // @Success 200 {string} string
-// @Router /chan/account/getAddress [get]
+// @Router /chan/account/new [get]
 func (a *account) getAddress(c *gin.Context) {
 	address, _, _ := a.Account.NewAccount()
 	middleware.ResponseSuccess(c, address)
@@ -42,7 +42,7 @@ func (a *account) getAddress(c *gin.Context) {
 // @Produce  json
 // @Param keys query string true "密钥｜助记词"
 // @Success 200 {string} string
-// @Router /chan/account/importRawKey [post]
+// @Router /chan/account/import_rawKey [post]
 func (a *account) importRawKey(c *gin.Context) {
 	var (
 		param   dto.ImportRawKeyInout
@@ -63,7 +63,7 @@ func (a *account) importRawKey(c *gin.Context) {
 // @Produce  json
 // @Param address query string true "地址"
 // @Success 200 {string} string
-// @Router /chan/account/exportRawKey [post]
+// @Router /chan/account/export_rawKey [post]
 func (a *account) exportRawKey(c *gin.Context) {
 	var (
 		param dto.ExportRawKeyInout
@@ -92,7 +92,7 @@ func (a *account) exportRawKey(c *gin.Context) {
 // @Produce  json
 // @Param address query string true "地址"
 // @Success 200 {string} string
-// @Router /chan/account/exportMnemonic [post]
+// @Router /chan/account/export_mnemonic [post]
 func (a *account) exportMnemonic(c *gin.Context) {
 	var (
 		param    dto.ExportMnemonicInout
@@ -121,7 +121,7 @@ func (a *account) exportMnemonic(c *gin.Context) {
 // @Produce  json
 // @Param address query string true "地址"
 // @Success 200 {string} string
-// @Router /chan/account/lockAccount [post]
+// @Router /chan/account/lock [post]
 func (a *account) lockAccount(c *gin.Context) {
 	var (
 		param dto.LockAccountInout
@@ -148,7 +148,7 @@ func (a *account) lockAccount(c *gin.Context) {
 // @Produce  json
 // @Param address query string true "地址"
 // @Success 200 {string} string
-// @Router /chan/account/unlockAccount [post]
+// @Router /chan/account/unlock [post]
 func (a *account) unlockAccount(c *gin.Context) {
 	var (
 		param dto.UnlockAccounttInout
@@ -174,7 +174,7 @@ func (a *account) unlockAccount(c *gin.Context) {
 // @Id 007
 // @Produce  json
 // @Success 200 {string} string
-// @Router /chan/account/listAccount [get]
+// @Router /chan/account/list [get]
 func (a *account) listAccount(c *gin.Context) {
 	data := a.Account.ListAccount()
 	middleware.ResponseSuccess(c, data)

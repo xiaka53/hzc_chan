@@ -44,6 +44,9 @@ func (h *Hash) Create() {
 }
 
 func (h *Hash) Updates(hash []string) {
+	if len(hash) < 1 {
+		return
+	}
 	var c gin.Context
 	c.Set("trace", "_update_hash")
 	public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Table(h.TableName()).Where("hash in (?)", hash).Updates(map[string]interface{}{"blockHash": h.BlockHash, "blockNumber": h.BlockNumber})
