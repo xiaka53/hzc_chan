@@ -66,3 +66,18 @@ func (o *GetTransactionByAddressInout) BindingValidParams(c *gin.Context) (err e
 	}
 	return
 }
+
+type GetTransactionByInputInout struct {
+	Address string `form:"address" json:"address" validate:"len=43,sql"`
+	Input   string `form:"input" json:"input" validate:"sql"`
+}
+
+func (o *GetTransactionByInputInout) BindingValidParams(c *gin.Context) (err error) {
+	if err = c.ShouldBind(o); err != nil {
+		return
+	}
+	if err = public.Validate.Struct(o); err != nil {
+		return errors.New("param error!")
+	}
+	return
+}

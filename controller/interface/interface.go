@@ -25,6 +25,7 @@ type Transaction interface {
 	GetTransactionByHash(hx string) (hash dao.Hash)
 	GetTransactionByBlock(block int) (data []dao.Hash)
 	GetTransactionByAddress(address string) (data []dao.Hash)
+	GetTransactionByInput(address, input string) (data []dao.Hash)
 }
 
 //挖矿

@@ -63,12 +63,18 @@ func (h *Hash) First() error {
 
 func (h *Hash) Find() []Hash {
 	var data []Hash
-	public.ChanPool.Where(h).Find(&data)
+	public.ChanPool.Where(h).Order("createtime desc").Find(&data)
 	return data
 }
 
 func (h *Hash) FindByAddress() []Hash {
 	var data []Hash
-	public.ChanPool.Where("`from`=? or `to`=?", h.From, h.From).Find(&data)
+	public.ChanPool.Where("`from`=? or `to`=?", h.From, h.From).Order("createtime desc").Find(&data)
+	return data
+}
+
+func (h *Hash) FindByInput() []Hash {
+	var data []Hash
+	public.ChanPool.Where("`from`=? or `to`=?", h.From, h.From).Where("input=?", h.Input).Order("createtime desc").Find(&data)
 	return data
 }

@@ -61,3 +61,8 @@ func (a *apiTransaction) GetTransactionByAddress(address string) (data []dao.Has
 	data = (&dao.Hash{From: address}).FindByAddress()
 	return
 }
+
+func (a *apiTransaction) GetTransactionByInput(address, input string) (data []dao.Hash) {
+	data = (&dao.Hash{From: address, Input: input}).FindByInput()
+	return
+}

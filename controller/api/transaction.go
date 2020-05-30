@@ -17,10 +17,11 @@ type transaction struct {
 func TransactionRouter(r *gin.RouterGroup) {
 	var t transaction
 	t.Transaction = interface_v1.GetTransaction()
-	r.GET("send", t.send_transaction)
+	r.POST("send", t.send_transaction)
 	r.GET("get_ransactionByHash", t.get_ransactionByHash)
 	r.GET("get_transactionByBlock", t.get_transactionByBlock)
 	r.GET("get_transactionByAddress", t.get_transactionByAddress)
+	r.GET("get_transactionByInput", t.get_transactionByInput)
 }
 
 // @Summary 发送交易
@@ -34,7 +35,7 @@ func TransactionRouter(r *gin.RouterGroup) {
 // @Param value query number true "转出金额"
 // @Param gas query number true "手续费"
 // @Success 200 {string} string
-// @Router /chan/transaction/send [get]
+// @Router /chan/transaction/send [post]
 func (t *transaction) send_transaction(c *gin.Context) {
 	var (
 		param dto.SendTransactionInout
@@ -61,7 +62,7 @@ func (t *transaction) send_transaction(c *gin.Context) {
 	middleware.ResponseSuccess(c, hash)
 }
 
-// @Summary genjuhash获取交易信息
+// @Summary 根据hash获取交易信息
 // @Tags transaction
 // @Id 014
 // @Produce  json
@@ -121,5 +122,27 @@ func (t *transaction) get_transactionByAddress(c *gin.Context) {
 		return
 	}
 	hash = t.Transaction.GetTransactionByAddress(param.Address)
+	middleware.ResponseSuccess(c, hash)
+}
+
+// @Summary 根据地址和备注获取交易信息
+// @Tags transaction
+// @Id 017
+// @Produce  json
+// @Param address query string true "地址"
+// @Param input query string true "input备注"
+// @Success 200 {obiect} dao.Hash
+// @Router /chan/transaction/get_transactionByInput [get]
+func (t *transaction) get_transactionByInput(c *gin.Context) {
+	var (
+		param dto.GetTransactionByInputInout
+		hash  []dao.Hash
+		err   error
+	)
+	if err = (&param).BindingValidParams(c); err != nil {
+		middleware.ResponseError(c, middleware.ERROR, err)
+		return
+	}
+	hash = t.Transaction.GetTransactionByInput(param.Address, param.Input)
 	middleware.ResponseSuccess(c, hash)
 }
