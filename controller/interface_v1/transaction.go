@@ -12,7 +12,7 @@ func GetTransaction() *apiTransaction {
 	return new(apiTransaction)
 }
 
-func (a *apiTransaction) SendTransaction(from, to, date, input string, value, gas float64) {
+func (a *apiTransaction) SendTransaction(from, to, date, input string, value, gas float64) (hx string) {
 	var (
 		fromAddress dao.Balance
 		toAddress   dao.Balance
@@ -34,14 +34,15 @@ func (a *apiTransaction) SendTransaction(from, to, date, input string, value, ga
 	} else {
 		hash.Value = value
 	}
-	hash = dao.Hash{
-		From:   from,
-		To:     to + date,
-		Gas:    gas,
-		Input:  input,
-		Status: 0,
-	}
+
+	hash.From = from
+	hash.To = to + date
+	hash.Gas = gas
+	hash.Input = input
+	hash.Status = "0"
+	(&hash).Create()
 	task.GetHash().Add(hash)
+	hx = hash.Hash
 	return
 }
 

@@ -18,16 +18,15 @@ var examplesMiner *miner
 
 func MinerInit() {
 	data := dao.Miner{Status: 1}
+	examplesMiner = &miner{mutex: sync.RWMutex{}}
 	if err := (&data).Last(); err != nil {
 		return
 	}
 	if data.Threads < 1 {
 		return
 	}
-	examplesMiner = &miner{
-		address: data.Address,
-		threads: data.Threads,
-	}
+	examplesMiner.address = data.Address
+	examplesMiner.threads = data.Threads
 	return
 }
 
@@ -70,10 +69,10 @@ func (m *miner) Start(threads int) bool {
 	if data.Threads < 1 {
 		return false
 	}
-	m.mutex.RLock()
+	m.mutex.Lock()
 	m.address = data.Address
 	m.threads = data.Threads
-	m.mutex.RUnlock()
+	m.mutex.Unlock()
 	return true
 }
 

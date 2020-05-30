@@ -40,17 +40,18 @@ func (h *hash) server() {
 			c                gin.Context
 			err              error
 		)
-		if hashData.Status == 2 {
+		db = public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Begin()
+		if hashData.Status == "2" {
 			goto CON
 		}
 		fromBalance.Address = hashData.From
 		fromBalance.Token = "HZC"
 		if err := (&fromBalance).First(); err != nil {
-			hashData.Status = 2
+			hashData.Status = "2"
 			goto CON
 		}
 		if fromBalance.Status == 2 {
-			hashData.Status = 2
+			hashData.Status = "2"
 			goto CON
 		}
 		fromBalance.Asset, _ = decimal.NewFromFloat(fromBalance.Asset).Sub(decimal.NewFromFloat(hashData.Gas)).Float64()
@@ -59,7 +60,6 @@ func (h *hash) server() {
 		}
 		fromTokenBalance.Address = hashData.From
 		c.Set("trace", "_new_transfer")
-		db = public.ChanPool.SetCtx(public.GetGinTraceContext(&c)).Begin()
 		if hashData.Index > 0 {
 			if hashData.From == hashData.To { //创建代币
 				fromTokenBalance.Token = hashData.ContractAddress
@@ -92,7 +92,7 @@ func (h *hash) server() {
 			toBalance.Address = hashData.To
 			toBalance.Token = fromBalance.Token
 			_ = (&toBalance).First()
-			toBalance.Asset, _ = decimal.NewFromFloat(toBalance.Asset).Add(decimal.NewFromFloat(hashData.Index)).Float64()
+			toBalance.Asset, _ = decimal.NewFromFloat(toBalance.Asset).Add(decimal.NewFromFloat(hashData.Value)).Float64()
 			if err = (&toBalance).Updates(db); err != nil {
 				goto ERR
 			}
@@ -100,13 +100,17 @@ func (h *hash) server() {
 		if err = (&fromBalance).Updates(db); err != nil {
 			goto ERR
 		}
-		db.Commit()
+		hashData.Status = "0"
 		goto CON
 	ERR:
-		hashData.Status = 2
+		hashData.Status = "2"
 		db.Rollback()
 	CON:
-		(&hashData).Create()
+		if err = (&hashData).Update(db); err != nil {
+			db.Rollback()
+		} else {
+			db.Commit()
+		}
 		getBlock().add(hashData.Hash)
 		continue
 	}

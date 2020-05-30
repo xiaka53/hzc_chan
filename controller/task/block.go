@@ -54,6 +54,7 @@ func (b *block) insert() {
 	hash = b.hash
 	b.Number++
 	b.Size = 235 //TODO 初始块235
+	b.hash = nil
 	b.sync.Unlock()
 	size += GetMiner().server()
 	tx = "hzcblock" + public.RandString(59, public.LOWER_CASE, public.NUMBER)

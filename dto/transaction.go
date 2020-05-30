@@ -9,8 +9,8 @@ import (
 type SendTransactionInout struct {
 	From  string  `form:"from" json:"from" validate:"len=43,sql"`
 	To    string  `form:"to" json:"to" validate:"len=43,sql"`
-	Date  string  `form:"date" json:"date" validate:"len=43,sql"`
-	Input string  `form:"input" json:"input" validate:"sql"`
+	Date  string  `form:"date" json:"date" validate:"omitempty,len=43,sql"`
+	Input string  `form:"input" json:"input" validate:"sql,omitempty"`
 	Value float64 `form:"value" json:"value" validate:"numeric"`
 	Gas   float64 `form:"gas" json:"gas" validate:"numeric"`
 }

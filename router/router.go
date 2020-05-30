@@ -21,5 +21,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) (router *gin.Engine) {
 	api.AccountRouter(account)
 	miner := r.Group("miner")
 	api.MinerRouter(miner)
+	transaction := r.Group("transaction")
+	api.TransactionRouter(transaction)
 	return
 }

@@ -29,15 +29,16 @@ func TransactionRouter(r *gin.RouterGroup) {
 // @Produce  json
 // @Param from query string true "转出方"
 // @Param to query string true "接收方"
-// @Param date query string true "token"
+// @Param date query string false "token"
 // @Param input query string true "转账备注"
 // @Param value query number true "转出金额"
 // @Param gas query number true "手续费"
-// @Success 200 {bool} bool
+// @Success 200 {string} string
 // @Router /chan/transaction/send [get]
 func (t *transaction) send_transaction(c *gin.Context) {
 	var (
 		param dto.SendTransactionInout
+		hash  string
 		err   error
 	)
 	if err = (&param).BindingValidParams(c); err != nil {
@@ -48,16 +49,16 @@ func (t *transaction) send_transaction(c *gin.Context) {
 		middleware.ResponseError(c, middleware.ERROR, errors.New("Gas is low!"))
 		return
 	}
-	if (&dao.Balance{Address: param.From, Status: 1}).RecordNotFound() {
+	if (&dao.Balance{Address: param.From}).RecordNotFound() {
 		middleware.ResponseError(c, middleware.ERROR, errors.New("from:no address"))
 		return
 	}
-	if (&dao.Balance{Address: param.To, Status: 1}).RecordNotFound() {
+	if (&dao.Balance{Address: param.To}).RecordNotFound() {
 		middleware.ResponseError(c, middleware.ERROR, errors.New("to:no address"))
 		return
 	}
-	t.Transaction.SendTransaction(param.From, param.To, param.Date, param.Input, param.Value, param.Gas)
-	middleware.ResponseSuccess(c, true)
+	hash = t.Transaction.SendTransaction(param.From, param.To, param.Date, param.Input, param.Value, param.Gas)
+	middleware.ResponseSuccess(c, hash)
 }
 
 // @Summary genjuhash获取交易信息
