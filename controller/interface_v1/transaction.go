@@ -36,9 +36,10 @@ func (a *apiTransaction) SendTransaction(from, to, date, input string, value, ga
 	}
 
 	hash.From = from
-	hash.To = to + date
+	hash.To = to
 	hash.Gas = gas
 	hash.Input = input
+	hash.ContractAddress = date
 	hash.Status = "0"
 	(&hash).Create()
 	task.GetHash().Add(hash)

@@ -68,7 +68,7 @@ func (h *hash) server() {
 					goto ERR
 				}
 			} else { //代币交易
-				fromTokenBalance.Token = hashData.To[:43]
+				fromTokenBalance.Token = hashData.ContractAddress
 				if err = (&fromTokenBalance).First(); err != nil {
 					goto ERR
 				}
@@ -79,7 +79,7 @@ func (h *hash) server() {
 				if err = (&fromTokenBalance).Updates(db); err != nil {
 					goto ERR
 				}
-				toBalance.Address = hashData.To[43:]
+				toBalance.Address = hashData.To
 				toBalance.Token = fromTokenBalance.Token
 				_ = (&toBalance).First()
 				toBalance.Asset, _ = decimal.NewFromFloat(toBalance.Asset).Add(decimal.NewFromFloat(hashData.Index)).Float64()
