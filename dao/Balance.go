@@ -53,5 +53,5 @@ func (b *Balance) Sum() error {
 }
 
 func (b *Balance) RecordNotFound() bool {
-	return public.ChanPool.Where(b).RecordNotFound()
+	return public.ChanPool.Where(b).First(b).RecordNotFound()
 }

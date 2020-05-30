@@ -35,5 +35,5 @@ func (t *Token) First() error {
 }
 
 func (t *Token) RecordNotFound() bool {
-	return public.ChanPool.Where(t).RecordNotFound()
+	return public.ChanPool.Where(t).First(t).RecordNotFound()
 }
